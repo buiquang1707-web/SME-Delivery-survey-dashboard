@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SME Delivery Survey Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef0f4;--card:#fff;--tx:#14213d;--mu:#5d6b82;--bd:#dde3ec;--c1:#2563eb;--c2:#0f9d8a;--c3:#e8a317;--c4:#7c5cd6;--c5:#d6537a;--ghn:#f26b21;--ghtk:#16a05a;--vtp:#d6283a;--oth:#8a94a6;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1420;--card:#16202f;--tx:#e8edf5;--mu:#97a5bb;--bd:#26344a;--c1:#6b95ff;--c2:#35c9b4;--c3:#f2b84b;--c4:#a58cf0;--c5:#f27ba0;--ghn:#ff8a4a;--ghtk:#3fcf85;--vtp:#ff6b7a;--oth:#a3adbf;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1420;--card:#16202f;--tx:#e8edf5;--mu:#97a5bb;--bd:#26344a;--c1:#6b95ff;--c2:#35c9b4;--c3:#f2b84b;--c4:#a58cf0;--c5:#f27ba0;--ghn:#ff8a4a;--ghtk:#3fcf85;--vtp:#ff6b7a;--oth:#a3adbf;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.55 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-variant-numeric:tabular-nums}
+main{max-width:1180px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:26px;margin:0 0 4px;font-weight:700;letter-spacing:-.01em;line-height:1.25}
+h2{font-size:17px;margin:0 0 12px;font-weight:600}h3{font-size:15px;margin:0 0 6px;font-weight:600}
+.sub{color:var(--mu);margin:0 0 16px;max-width:78ch}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px}
+.hd{border-left:6px solid var(--ghn);padding-left:14px;margin-bottom:6px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.tab{font:inherit;font-size:14px;padding:8px 14px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:99px;cursor:pointer}
+.tab.on{background:var(--ghn);border-color:var(--ghn);color:#fff;font-weight:600}
+.tab:focus-visible,.chip:focus-visible{outline:2px solid var(--c1);outline-offset:2px}
+.chip{font:inherit;font-size:13px;padding:5px 11px;margin:0 6px 6px 0;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:99px;cursor:pointer}
+.chip.on{background:var(--c1);border-color:var(--c1);color:#fff}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:12px}
+.kpi small{display:block;color:var(--mu);font-size:12.5px}.kpi b{display:block;font-size:26px;line-height:1.25;margin:2px 0;font-weight:700}
+.kpi.main b{color:var(--ghn)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:14px;margin-bottom:14px}
+.pie{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.donut{width:140px;height:140px;border-radius:50%;position:relative;flex:none}
+.donut::after{content:"";position:absolute;inset:32px;border-radius:50%;background:var(--card)}
+.pie ul{list-style:none;margin:0;padding:0;flex:1;min-width:190px}
+.pie li{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:14px}
+.pie li i{width:11px;height:11px;border-radius:3px;flex:none}.pie li b{margin-left:auto}.pie li small{color:var(--mu);width:34px;text-align:right}
+.hb{display:grid;grid-template-columns:minmax(100px,170px) 1fr 82px;gap:10px;align-items:center;margin:9px 0;font-size:14px}
+.tr{background:var(--bg);border-radius:5px;height:20px;overflow:hidden}.tr div{height:100%;border-radius:5px}
+.hb b{text-align:right}.hb small{color:var(--mu);font-weight:400;margin-left:5px}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:480px}
+th,td{padding:9px 10px;text-align:center;border-bottom:1px solid var(--bd);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}th{color:var(--mu);font-weight:500;font-size:13px}
+td.max{font-weight:700}
+.ins{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;margin-top:10px}
+.ins .card{border-top:4px solid var(--ghn)}.ins p{margin:0;color:var(--mu)}.ins p b{color:var(--tx)}
+.note{color:var(--mu);font-size:13px;margin-top:10px}
+.fl{display:flex;flex-wrap:wrap;gap:12px 36px;margin-top:14px}.fl label{display:block;font-size:13px;color:var(--mu);margin-bottom:5px}.fl .note{flex-basis:100%;margin:0}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:no-preference){.tr div{transition:width .25s}}
+</style></head><body><main>
+<div class="hd"><h1>Khảo sát hành vi khách hàng SME và đánh giá năng lực cạnh tranh của GHN</h1></div>
+<p class="sub">Dashboard từ khảo sát 115 chủ shop và doanh nghiệp nhỏ bán hàng đa kênh về việc sử dụng dịch vụ giao hàng (ngành E-Logistics Việt Nam). Chọn các tab bên dưới để xem từng nhóm nội dung.</p>
+
+<div class="card fl" id="fl"></div>
+<section class="kpis" id="kp" style="margin-top:12px">
+<div class="card kpi"><small>Số phản hồi</small><b>115</b><small>Toàn bộ khảo sát</small></div>
+<div class="card kpi"><small>Kênh bán chính</small><b>TikTok Shop</b><small>50,4% người trả lời</small></div>
+<div class="card kpi"><small>Độ phủ cao nhất</small><b>GHTK</b><small>75,7% có đơn vị này gần nơi bán</small></div>
+<div class="card kpi main"><small>Dùng thường xuyên nhất</small><b>Viettel Post</b><small>40,0%, GHN đạt 22,6%</small></div>
+<div class="card kpi"><small>Dùng từ 2 đơn vị trở lên</small><b>86,1%</b><small>Dùng song song</small></div>
+<div class="card kpi"><small>Hay đổi đơn vị giao hàng</small><b>64,3%</b><small>Thường xuyên + thỉnh thoảng</small></div>
+</section>
+
+<nav class="tabs" id="tabs" aria-label="Nhóm nội dung"></nav>
+
+<section id="p0" class="grid">
+<div class="card"><h2>Câu 1. Hình thức kinh doanh</h2><div class="pie"><div class="donut" id="d1"></div><ul id="l1"></ul></div></div>
+<div class="card"><h2>Câu 2. Kênh bán hàng chính</h2><div class="pie"><div class="donut" id="d2"></div><ul id="l2"></ul></div></div>
+<div class="card"><h2>Câu 3. Số đơn phát sinh mỗi ngày</h2><div id="b3"></div><p class="note">Gần một nửa (49,6%) có 30 đến 100 đơn mỗi ngày.</p></div>
+</section>
+
+<section id="p1" class="grid" hidden>
+<div class="card"><h2>Câu 4. Đơn vị có mặt gần nơi kinh doanh (chọn nhiều)</h2><div id="b4"></div></div>
+<div class="card"><h2>Câu 5. Đơn vị dùng thường xuyên nhất</h2><div class="pie"><div class="donut" id="d5"></div><ul id="l5"></ul></div></div>
+<div class="card"><h2>Câu 6. Tiêu chí ưu tiên khi chọn đơn vị</h2><div id="b6"></div></div>
+<div class="card"><h2>Câu 7. Kênh tìm hiểu thông tin (chọn nhiều)</h2><div id="b7"></div></div>
+<div class="card"><h2>Câu 8. Số đơn vị dùng song song</h2><div class="pie"><div class="donut" id="d8"></div><ul id="l8"></ul></div></div>
+<div class="card"><h2>Câu 9. Mức độ thay đổi đơn vị giao hàng</h2><div id="b9"></div></div>
+</section>
+
+<section id="p2" hidden>
+<div class="grid">
+<div class="card"><h2>Đơn vị hài lòng nhất theo tiêu chí</h2><div id="chips"></div><div id="b10"></div><p class="note" id="cn"></p></div>
+<div class="card"><h2>Bảng so sánh 6 tiêu chí (% người chọn)</h2><div class="tw"><table><thead><tr><th>Tiêu chí</th><th>GHN</th><th>GHTK</th><th>Viettel Post</th><th>Khác</th></tr></thead><tbody id="tb"></tbody></table></div><p class="note">Ô đậm là đơn vị dẫn đầu của tiêu chí. Nền màu càng đậm thì tỷ lệ càng cao.</p></div>
+<div class="card" id="prof" hidden><h2 id="pt"></h2><div id="pb"></div><p class="note">★ là tiêu chí mà đơn vị này dẫn đầu.</p></div>
+</div>
+</section>
+
+<h2 style="margin-top:22px">Nhận xét chính</h2>
+<section class="ins">
+<div class="card"><h3>1. Độ phủ và mức dùng của GHN còn thấp</h3><p>GHTK (75,7%) và Viettel Post (70,4%) có mặt ở phần lớn khu vực của người trả lời, trong khi GHN chỉ <b>36,5%</b>. Mức dùng thường xuyên cũng thấp hơn: GHN <b>22,6%</b> so với Viettel Post 40,0% và GHTK 33,9%.</p></div>
+<div class="card"><h3>2. Trải nghiệm của GHN không thua kém</h3><p>Trung bình 6 tiêu chí, GHN được chọn là hài lòng nhất ở <b>34,5%</b> người trả lời, cao hơn GHTK (29,7%) và Viettel Post (26,2%). GHN dẫn ở thời gian giao hàng (42,6%) và tỷ lệ giao thành công (36,5%). Khoảng cách chủ yếu nằm ở độ phủ, chưa phải chất lượng.</p></div>
+<div class="card"><h3>3. SME linh hoạt, không trung thành với một đơn vị</h3><p><b>86,1%</b> dùng từ 2 đơn vị trở lên, <b>64,3%</b> đổi đơn vị thường xuyên hoặc thỉnh thoảng. Quyết định dựa đồng thời vào cước, tốc độ và COD nhanh. Nhân viên tư vấn trực tiếp là kênh tìm hiểu số 1 (64,3%).</p></div>
+</section>
+<p class="note">Câu 1 đến 9 khớp tổng 115 phản hồi. Số liệu câu 10 đến 15 được đọc từ ảnh chụp biểu đồ nên có thể lệch khoảng 1 phản hồi so với Google Sheets. Mỗi người chỉ chọn một đơn vị hài lòng nhất ở mỗi tiêu chí. Nhận xét chỉ phản ánh mẫu khảo sát này.</p>
+</main>
+<script>
+const N=115,$=id=>document.getElementById(id),pc=v=>(v/N*100).toFixed(1).replace('.',','),P=['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--c5)'];
+const CAR=['var(--ghn)','var(--ghtk)','var(--vtp)','var(--oth)'],CN=['GHN','GHTK','Viettel Post','Khác'];
+const D={
+q1:[['Bán hàng online cá nhân',30],['Shop online quy mô nhỏ',54],['Doanh nghiệp nhỏ và vừa (SME)',31]],
+q2:[['Facebook / Instagram',58],['TikTok Shop',26],['Website riêng',31]],
+q3:[['Dưới 10 đơn',13],['10 đến 30 đơn',40],['30 đến 100 đơn',57],['Trên 100 đơn',5]],
+q4:[['GHTK',87],['Viettel Post',81],['GHN',42],['SPX, J&T',3],['J&T',2],['SPX',2],['Shopee Express',1]],
+q5:[['Viettel Post',46],['GHTK',39],['GHN',26],['Khác (J&T)',4]],
+q6:[['Thu hộ COD nhanh',31],['Giá cước',29],['Giao hàng nhanh',28],['Dễ tạo đơn, dễ dùng',23],['Nhân viên hỗ trợ trực tiếp',4]],
+q7:[['Nhân viên tư vấn trực tiếp',74],['Mạng xã hội / website',64],['Nhóm cộng đồng người bán',61],['Bạn bè, người quen',27],['Trải nghiệm thực tế',26]],
+q8:[['1 đơn vị',16],['2 đơn vị',74],['3 đơn vị trở lên',25]],
+q9:[['Thường xuyên',13],['Thỉnh thoảng',61],['Ít khi',35],['Gần như không',6]]};
+const CR=['Cước vận chuyển','Thời gian giao thực tế','Tỷ lệ giao thành công','Thu hộ COD và đối soát','Xử lý đơn hoàn, đơn lỗi','Hỗ trợ khách hàng'];
+const S=[[37,40,28,10],[49,37,20,9],[42,34,28,11],[38,29,36,12],[36,35,33,11],[36,30,36,13]];
+function donut(k,id,l,cols,dm){const it=D[k],cs=cols||P;let a=0;
+$(id).style.background='conic-gradient('+it.map((x,i)=>{const p=x[1]/N*100,s=`${dm&&dm[i]?`color-mix(in srgb,${cs[i]} 22%,transparent)`:cs[i]} ${a}% ${a+p}%`;a+=p;return s}).join(',')+')';
+$(l).innerHTML=it.map((x,i)=>`<li style="opacity:${dm&&dm[i]?.35:1}"><i style="background:${cs[i]}"></i>${x[0]}<b>${pc(x[1])}%</b><small>${x[1]}</small></li>`).join('')}
+function bars(id,it,cs,dm){const m=Math.max(...it.map(x=>x[1]));
+$(id).innerHTML=it.map((x,i)=>`<div class="hb" style="opacity:${dm&&dm[i]?.3:1}"><span>${x[0]}</span><div class="tr"><div style="width:${x[1]/m*100}%;background:${cs?cs[i]:P[0]}"></div></div><b>${pc(x[1])}%<small>${x[1]}</small></b></div>`).join('')}
+const F={car:-1,ch:-1},cix=n=>n.includes('GHN')?0:n.includes('GHTK')?1:n.includes('Viettel')?2:3;
+function draw(){donut('q1','d1','l1');donut('q2','d2','l2',null,F.ch<0?null:D.q2.map((_,i)=>i!==F.ch));bars('b3',D.q3);
+bars('b4',D.q4,[CAR[1],CAR[2],CAR[0],CAR[3],CAR[3],CAR[3],CAR[3]],D.q4.map(x=>F.car>=0&&cix(x[0])!==F.car));
+donut('q5','d5','l5',[CAR[2],CAR[1],CAR[0],CAR[3]],D.q5.map(x=>F.car>=0&&cix(x[0])!==F.car));
+bars('b6',D.q6);bars('b7',D.q7);donut('q8','d8','l8');bars('b9',D.q9,['var(--c3)','var(--c1)','var(--c2)','var(--oth)']);}
+const T=['I. Thông tin chung','II. Nhận diện và mức độ sử dụng','III. Trải nghiệm dịch vụ'];let ti=0,ci=0;
+function tabs(){$('tabs').innerHTML=T.map((t,i)=>`<button class="tab${i===ti?' on':''}" data-i="${i}">${t}</button>`).join('');[0,1,2].forEach(i=>$('p'+i).hidden=i!==ti)}
+$('tabs').onclick=e=>{const b=e.target.closest('button');if(b){ti=+b.dataset.i;tabs()}};tabs();
+const avg=CN.map((_,j)=>S.reduce((a,r)=>a+r[j],0)/6);
+function sat(){const items=['Tổng hợp 6 tiêu chí',...CR];
+$('chips').innerHTML=items.map((t,i)=>`<button class="chip${i===ci?' on':''}" data-i="${i}">${t}</button>`).join('');
+const v=ci===0?avg:S[ci-1],mx=Math.max(...v);
+$('b10').innerHTML=CN.map((n,j)=>`<div class="hb" style="opacity:${F.car>=0&&j!==F.car?.3:1}"><span>${v[j]===mx?'★ ':''}${n}</span><div class="tr"><div style="width:${v[j]/mx*100}%;background:${CAR[j]}"></div></div><b>${pc(v[j])}%<small>${ci===0?v[j].toFixed(1).replace('.',','):v[j]}</small></b></div>`).join('');
+$('cn').textContent=ci===0?'Trung bình tỷ lệ chọn là đơn vị hài lòng nhất qua 6 tiêu chí.':'Tiêu chí: '+CR[ci-1]+'. Dẫn đầu: '+CN[v.indexOf(mx)]+'.'}
+$('chips').onclick=e=>{const b=e.target.closest('button');if(b){ci=+b.dataset.i;sat()}};sat();
+$('tb').innerHTML=CR.map((c,i)=>{const mx=Math.max(...S[i]);return `<tr><td>${c}</td>${S[i].map((x,j)=>`<td class="${x===mx?'max':''}" style="background:color-mix(in srgb,${CAR[j]} ${Math.round(x/N*100*1.1)}%,transparent)">${pc(x)}%</td>`).join('')}</tr>`}).join('')+`<tr><td><b>Trung bình</b></td>${avg.map((x,j)=>`<td class="${x===Math.max(...avg)?'max':''}">${pc(x)}%</td>`).join('')}</tr>`;
+const CH=D.q2.map(x=>x[0]),COV=[42,87,81],FRQ=[26,39,46];
+const lead=j=>S.filter(r=>r[j]===Math.max(...r)).length,rank=(a,j)=>[...a].sort((x,y)=>y-x).indexOf(a[j])+1;
+function flt(){const g=(t,k,arr)=>`<div><label>${t}</label><div>${['Tất cả',...arr].map((n,i)=>`<button class="chip${F[k]===i-1?' on':''}" data-k="${k}" data-i="${i-1}">${n}</button>`).join('')}</div></div>`;
+let n='';if(F.car>=0)n+='Bộ lọc đơn vị làm nổi bật đơn vị đã chọn ở các biểu đồ có số liệu theo đơn vị (Câu 4, 5, 10 đến 15) và cập nhật thẻ KPI. ';
+if(F.ch>=0)n+='Bộ lọc kênh làm nổi bật kênh ở Câu 2 và thêm thẻ KPI của kênh. Các câu khác chưa lọc theo kênh được vì dữ liệu hiện chỉ có tổng hợp từng câu. Khi có dữ liệu thô từ Google Sheets, bộ lọc sẽ áp dụng cho toàn trang.';
+$('fl').innerHTML=g('Đơn vị giao hàng','car',['GHN','GHTK','Viettel Post'])+g('Kênh bán hàng','ch',CH)+(n?`<p class="note">${n}</p>`:'')}
+$('fl').onclick=e=>{const b=e.target.closest('button');if(b){F[b.dataset.k]=+b.dataset.i;render()}};
+function kpis(){let k;if(F.car>=0){const j=F.car;k=[['Độ phủ gần nơi bán',pc(COV[j])+'%',COV[j]+' người, hạng '+rank(COV,j)+'/3'],['Dùng thường xuyên nhất',pc(FRQ[j])+'%',FRQ[j]+' người, hạng '+rank(FRQ,j)+'/3',1],['Hài lòng trung bình',pc(avg[j])+'%','Trung bình 6 tiêu chí, hạng '+rank(avg.slice(0,3),j)+'/3'],['Tiêu chí dẫn đầu',lead(j)+'/6','Số tiêu chí được chọn nhiều nhất'],['Dùng từ 2 đơn vị trở lên','86,1%','Toàn mẫu, chưa tách theo đơn vị'],['Hay đổi đơn vị','64,3%','Toàn mẫu, chưa tách theo đơn vị']]}
+else k=[['Số phản hồi','115','Toàn bộ khảo sát'],['Kênh bán chính','Facebook / Instagram','50,4% người trả lời'],['Độ phủ cao nhất','GHTK','75,7% có đơn vị này gần nơi bán'],['Dùng thường xuyên nhất','Viettel Post','40,0%, GHN đạt 22,6%',1],['Dùng từ 2 đơn vị trở lên','86,1%','Dùng song song'],['Hay đổi đơn vị giao hàng','64,3%','Thường xuyên + thỉnh thoảng']];
+if(F.ch>=0){const c=D.q2[F.ch];k.unshift(['Bán qua '+c[0],pc(c[1])+'%',c[1]+' trên 115 người trả lời',1])}
+$('kp').innerHTML=k.map(x=>`<div class="card kpi${x[3]?' main':''}"><small>${x[0]}</small><b>${x[1]}</b><small>${x[2]}</small></div>`).join('')}
+function prof(){const j=F.car;$('prof').hidden=j<0;if(j<0)return;$('pt').textContent='Hồ sơ '+CN[j]+' theo 6 tiêu chí';
+$('pb').innerHTML=CR.map((c,i)=>{const m=Math.max(...S[i]),v=S[i][j];return `<div class="hb"><span>${c}</span><div class="tr"><div style="width:${v/m*100}%;background:${CAR[j]}"></div></div><b>${pc(v)}%<small>${v===m?'★':''}</small></b></div>`}).join('')}
+function render(){flt();kpis();draw();sat();prof();document.querySelectorAll('#tb tr').forEach(tr=>[...tr.children].forEach((td,j)=>{if(j)td.style.opacity=F.car>=0&&j-1!==F.car?.3:1}))}
+render();
+</script></body></html>
